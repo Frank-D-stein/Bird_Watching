@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  bird-watcher:
+    build: .
+    container_name: bird-watching-app
+    restart: unless-stopped
+    
+    # Access to camera device
+    devices:
+      - /dev/video0:/dev/video0
+    
+    # Privileged mode may be needed for camera access
+    privileged: true
+    
+    # Environment variables
+    environment:
+      - CAMERA_INDEX=0
+      - CAPTURE_INTERVAL=60
+      - IMAGE_WIDTH=1280
+      - IMAGE_HEIGHT=720
+      - MOTION_THRESHOLD=25
+      - MIN_CONTOUR_AREA=500
+      - DATA_DIR=/app/data
+      - LOG_LEVEL=INFO
+      # Optional: Weather API configuration
+      # - WEATHER_API_KEY=your_api_key_here
+      # - WEATHER_API_URL=https://api.openweathermap.org/data/2.5/weather
+      # - LOCATION_LAT=40.7128
+      # - LOCATION_LON=-74.0060
+    
+    # Mount volume for persistent data
+    volumes:
+      - ./data:/app/data
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
