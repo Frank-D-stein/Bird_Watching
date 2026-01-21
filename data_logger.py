@@ -5,6 +5,7 @@ import os
 import json
 import csv
 import logging
+import cv2
 from datetime import datetime
 from pathlib import Path
 
@@ -107,8 +108,6 @@ class DataLogger:
         Returns:
             Path: Path to saved image
         """
-        import cv2
-        
         timestamp = datetime.now()
         filename = f"{prefix}_{timestamp.strftime('%Y%m%d_%H%M%S')}.jpg"
         filepath = self.images_dir / filename
@@ -137,8 +136,12 @@ class DataLogger:
             species = row['species']
             species_count[species] = species_count.get(species, 0) + 1
         
+        most_common = None
+        if species_count:
+            most_common = max(species_count.items(), key=lambda x: x[1])[0]
+        
         return {
             'total_sightings': len(rows),
             'species_count': species_count,
-            'most_common_species': max(species_count.items(), key=lambda x: x[1])[0] if species_count else None
+            'most_common_species': most_common
         }

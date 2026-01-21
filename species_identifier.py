@@ -2,6 +2,7 @@
 Bird species identification module.
 This is a placeholder for future ML model integration.
 """
+import cv2
 import logging
 from datetime import datetime
 
@@ -72,7 +73,6 @@ class SpeciesIdentifier:
         Returns:
             str: Size category (Small, Medium, Large)
         """
-        import cv2
         area = cv2.contourArea(contour)
         
         if area < 1000:

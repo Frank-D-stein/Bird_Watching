@@ -54,15 +54,21 @@ class WeatherMonitor:
             response.raise_for_status()
             data = response.json()
             
+            # Safely extract weather data with fallbacks
+            main_data = data.get('main', {})
+            weather_data = data.get('weather', [{}])[0]
+            wind_data = data.get('wind', {})
+            clouds_data = data.get('clouds', {})
+            
             weather_info = {
                 'timestamp': datetime.now().isoformat(),
-                'temperature': data['main']['temp'],
-                'feels_like': data['main']['feels_like'],
-                'humidity': data['main']['humidity'],
-                'pressure': data['main']['pressure'],
-                'conditions': data['weather'][0]['description'],
-                'wind_speed': data['wind']['speed'],
-                'clouds': data['clouds']['all']
+                'temperature': main_data.get('temp'),
+                'feels_like': main_data.get('feels_like'),
+                'humidity': main_data.get('humidity'),
+                'pressure': main_data.get('pressure'),
+                'conditions': weather_data.get('description', 'Unknown'),
+                'wind_speed': wind_data.get('speed'),
+                'clouds': clouds_data.get('all')
             }
             
             logger.info(f"Weather: {weather_info['temperature']}°C, "
