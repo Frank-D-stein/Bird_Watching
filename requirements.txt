@@ -3,3 +3,6 @@ numpy==1.24.3
 pillow==10.3.0
 requests==2.31.0
 python-dateutil==2.8.2
+flask==3.0.2
+onnxruntime==1.17.3
+onnx==1.15.0

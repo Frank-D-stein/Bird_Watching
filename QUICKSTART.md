@@ -56,6 +56,17 @@ cat data/logs/bird_sightings.csv
 
 # View captured images
 ls -lh data/images/
+
+# View captured audio (if enabled)
+ls -lh data/audio/
+```
+
+### Web Dashboard
+
+Open the dashboard in your browser:
+
+```
+http://localhost:5000
 ```
 
 ### See Statistics
@@ -106,6 +117,11 @@ docker-compose up -d --build
    ```
 
 2. Ensure the camera has a clear view of the feeder
+
+### Multi-Camera Setup
+
+1. Map additional devices in `docker-compose.yml`
+2. Set `CAMERA_INDEXES=0,1` in `.env`
 
 ### View More Logs?
 

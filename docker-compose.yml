@@ -9,6 +9,7 @@ services:
     # Access to camera device
     devices:
       - /dev/video0:/dev/video0
+      # - /dev/video1:/dev/video1  # Optional second camera
     
     # Privileged mode may be needed for camera access
     privileged: true
@@ -16,6 +17,7 @@ services:
     # Environment variables
     environment:
       - CAMERA_INDEX=0
+      # - CAMERA_INDEXES=0,1  # For multi-camera setups
       - CAPTURE_INTERVAL=60
       - IMAGE_WIDTH=1280
       - IMAGE_HEIGHT=720
@@ -23,15 +25,33 @@ services:
       - MIN_CONTOUR_AREA=500
       - DATA_DIR=/app/data
       - LOG_LEVEL=INFO
-      # Optional: Weather API configuration
-      # - WEATHER_API_KEY=your_api_key_here
-      # - WEATHER_API_URL=https://api.openweathermap.org/data/2.5/weather
-      # - LOCATION_LAT=40.7128
-      # - LOCATION_LON=-74.0060
+      - DASHBOARD_ENABLED=1
+      - DASHBOARD_PORT=5000
+      # Bird species classifier (run: python setup_model.py)
+      - ML_MODEL_PATH=/app/data/models/bird_classifier.onnx
+      - ML_LABELS_PATH=/app/data/models/bird_labels.txt
+      - ML_MIN_CONFIDENCE=0.1
+      # Object detection (humans, animals, objects)
+      - OBJECT_DETECTION_ENABLED=1
+      # - OBJECT_MODEL_PATH=/app/data/models/yolov8n.onnx  # Optional YOLO model
+      - OBJECT_CONFIDENCE_THRESHOLD=0.4
+      - OBJECT_NMS_THRESHOLD=0.5
+      # - RARE_SPECIES=Snowy Owl,Golden Eagle
+      # - ALERT_WEBHOOK_URL=https://example.com/webhook
+      # - AUDIO_ENABLED=1
+      # - AUDIO_MODEL_PATH=/app/data/models/audio_model.onnx
+      # - AUDIO_LABELS_PATH=/app/data/models/audio_labels.txt
+      - WEATHER_API_KEY=0702c7cd967dec00854f44ede02bc0bd
+      - WEATHER_API_URL=https://api.openweathermap.org/data/2.5/weather
+      - LOCATION_LAT=33.7490
+      - LOCATION_LON=-84.3880
     
     # Mount volume for persistent data
     volumes:
       - ./data:/app/data
+
+    ports:
+      - "5000:5000"
     
     # Logging configuration
     logging:

@@ -68,16 +68,56 @@ class WeatherMonitor:
                 'pressure': main_data.get('pressure'),
                 'conditions': weather_data.get('description', 'Unknown'),
                 'wind_speed': wind_data.get('speed'),
-                'clouds': clouds_data.get('all')
+                'clouds': clouds_data.get('all'),
+                'configured': True
             }
             
-            logger.info(f"Weather: {weather_info['temperature']}°C, "
+            logger.info(f"Weather: {weather_info['temperature']}C, "
                        f"{weather_info['conditions']}")
             return weather_info
             
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Weather API HTTP error: {e}")
+            return {
+                'timestamp': datetime.now().isoformat(),
+                'temperature': None,
+                'feels_like': None,
+                'humidity': None,
+                'pressure': None,
+                'conditions': 'Error',
+                'wind_speed': None,
+                'clouds': None,
+                'configured': True,
+                'error': f'HTTP error: {e.response.status_code if e.response else "unknown"}'
+            }
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Weather API request error: {e}")
+            return {
+                'timestamp': datetime.now().isoformat(),
+                'temperature': None,
+                'feels_like': None,
+                'humidity': None,
+                'pressure': None,
+                'conditions': 'Error',
+                'wind_speed': None,
+                'clouds': None,
+                'configured': True,
+                'error': f'Request error: {str(e)}'
+            }
         except Exception as e:
             logger.error(f"Error fetching weather data: {e}")
-            return self._get_default_weather()
+            return {
+                'timestamp': datetime.now().isoformat(),
+                'temperature': None,
+                'feels_like': None,
+                'humidity': None,
+                'pressure': None,
+                'conditions': 'Error',
+                'wind_speed': None,
+                'clouds': None,
+                'configured': True,
+                'error': f'Error: {str(e)}'
+            }
     
     def _get_default_weather(self):
         """
@@ -95,5 +135,10 @@ class WeatherMonitor:
             'conditions': 'Unknown',
             'wind_speed': None,
             'clouds': None,
-            'note': 'Weather API not configured'
+            'configured': False,
+            'error': 'Weather API not configured - set WEATHER_API_KEY, LOCATION_LAT, and LOCATION_LON'
         }
+    
+    def is_configured(self):
+        """Check if weather monitoring is properly configured."""
+        return self.enabled
