@@ -41,10 +41,7 @@ services:
       # - AUDIO_ENABLED=1
       # - AUDIO_MODEL_PATH=/app/data/models/audio_model.onnx
       # - AUDIO_LABELS_PATH=/app/data/models/audio_labels.txt
-      - WEATHER_API_KEY=0702c7cd967dec00854f44ede02bc0bd
-      - WEATHER_API_URL=https://api.openweathermap.org/data/2.5/weather
-      - LOCATION_LAT=33.7490
-      - LOCATION_LON=-84.3880
+
     
     # Mount volume for persistent data
     volumes:
